@@ -1,63 +1,51 @@
+source("./header.R")
+
 mainDir <- "./maildir"
-
-# takes folder as an input and returns list of files
-fetchFiles <- function(repo, breadth = 0) {
-  if(is.na(repo))
-    return(NULL)
-  
-  files <- list.files(path = repo, all.files = F, full.names = T)
-  subdirs <- list.dirs(path = repo, full.names = T, recursive = F)
-  breadth <- if(breadth == 0) length(subdirs) else breadth
-  subdirs <- subdirs[1: breadth]
-  
-  
-  retval <- c()
-  # process Files
-  for(file in files){
-    if(!dir.exists(file)){
-      retval <- append(retval, file)
-    }
-  }
-  # process Directories
-  for(subdir in subdirs){
-    retval <- append(retval, fetchFiles(subdir, 8))
-  }
-  return(retval)
-}
-
 allFiles <- fetchFiles(mainDir)
-contents <- c()
-## FYI: This part is resource-intensive
-for(fileName in allFiles){
-  content <- readChar(fileName, file.info(fileName)$size)
-  contents <- append(contents, content)
-}
+contents <- readAllFiles(allFiles)
+# 3. ... use 10.000 of email/files randomly
+contents <- sample(x = contents, size = 10000)
 
-## Retrieve "From", "To", "Subject" fields
-contacts <- data.frame(row.names =  c("From", "To", "Subject"))
+# Create DataFrame
+emailsDF <- data.frame(matrix(ncol = 3, nrow = 0))
 
-library("stringr")
-
-matchBetween <- function(text, pat1, pat2){
-  regex <- regexpr(pattern = paste(pat1, "(.*?)", pat2), text = text, perl = T)
-  s <- attr(regex, "capture.start")
-  e <- s + attr(regex, "capture.length") - 1
-  substr(text,  s, e)
-}
-
-
-for(i in 1:64){
+# Populate DataFrame
+#### TODO: Make this as function/Tip: create df inside func. then return
+for(i in 1:length(contents)){
+  # get and clean each email
   lines <- contents[i]
   lines <- str_replace_all(lines, "[\r\n\t]" , " ")
-  
+  # Fetch 'From' field:
   From = matchBetween(lines, "From:", "To:")
+  From = trimws(From)
+  # Fetch 'To' field:
   To = matchBetween(lines, "To:", "Subject:")
+  To = strsplit(To, split = ",")
+  To = lapply(To, trimws)
+  # Fetch 'Subject' field:
   Subject = matchBetween(lines, "Subject:", "Cc:")
-  if(length(Subject) < 2)
+  if(nchar(Subject) < 2 || grepl("From", Subject, fixed = T)){
     Subject = matchBetween(lines, "Subject:", "Mime-Version:")
-
-  print(paste("---->From: ", From))
-  print(paste("-------To:", To))
-  print(paste("--Subject:", Subject))
+  }
+  Subject = trimws(Subject)
+  
+  ## Anomalies:
+  # Condition 1: some emails do not match the standard structure, so skip
+  # Condition 2: some emails have x-From instead of From, thus we get clutter
+  if((is_empty(To) || is_empty(From)) || nchar(From) > 100){
+    next
+  }
+  
+  print(paste("Email:", i))  
+  
+  for(t in To){
+    df <- data.frame(From, t, Subject)
+    emailsDF <- rbind(emailsDF, df)
+  }   
 }
+
+# Rename Columns
+colnames(emailsDF) <- c("From", "To", "Subject")
+
+write.csv(x = emailsDF, "./emails.csv", row.names = F)
 
