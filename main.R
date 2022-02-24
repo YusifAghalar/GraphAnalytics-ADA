@@ -47,5 +47,20 @@ for(i in 1:length(contents)){
 # Rename Columns
 colnames(emailsDF) <- c("From", "To", "Subject")
 
-write.csv(x = emailsDF, "./emails.csv", row.names = F)
+#write.csv(x = emailsDF, "./emails.csv", row.names = F)
 
+g=graph_from_data_frame(emailsDF)
+
+#Edges
+edges=E(g)
+#Vertices
+vertice=V(g)
+
+#Edge density
+e_density = edge_density(g, loops = FALSE)
+
+#Degree of each node
+igraph::degree(g)
+
+#Centrality
+igraph::centr_betw(g)
