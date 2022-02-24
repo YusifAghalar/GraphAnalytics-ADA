@@ -57,10 +57,13 @@ edges=E(g)
 vertice=V(g)
 
 #Edge density
-e_density = edge_density(g, loops = FALSE)
+e_density <- edge_density(g, loops = FALSE)
 
 #Degree of each node
-igraph::degree(g)
+g.degreee <-igraph::degree(g)
 
 #Centrality
-igraph::centr_betw(g)
+g.cent <- igraph::centr_betw(g)
+
+#Diamter of graph
+g.diamter <-igraph::diameter(g)
