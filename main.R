@@ -49,21 +49,51 @@ colnames(emailsDF) <- c("From", "To", "Subject")
 
 #write.csv(x = emailsDF, "./emails.csv", row.names = F)
 
-g=graph_from_data_frame(emailsDF)
+egraph<-graph_from_data_frame(emailsDF)
+
+#simplify graph
+egraph <- igraph::simplify(
+  egraph,
+  remove.multiple = TRUE,
+  remove.loops = TRUE,
+)
 
 #Edges
-edges=E(g)
+edges=E(egraph)
 #Vertices
-vertice=V(g)
+vertice=V(egraph)
 
 #Edge density
-e_density <- edge_density(g, loops = FALSE)
+e_density <- edge_density(egraph, loops = FALSE)
 
 #Degree of each node
-g.degreee <-igraph::degree(g)
+egraph.degreee <-igraph::degree(egraph)
 
 #Centrality
-g.cent <- igraph::centr_betw(g)
+egraph.cent <- igraph::centr_betw(egraph)
 
 #Diamter of graph
-g.diamter <-igraph::diameter(g)
+egraph.diamter <-igraph::diameter(egraph)
+
+
+#########Other functions from igraph
+##Delete edges from graph
+egraph<-delete_edges(egraph,seq(1, 9, by = 2))
+
+##Delete vertice from graph
+egraph<-delete_vertices(egraph,"yusif.aghalarli@gmail.com")
+
+## Add edges to graph
+egraph <- add_edges(egraph, c("lindy.donoho@enron.com","david.delainey@enron.com"))
+##Add vertice to graph
+egraph <- add_vertices(egraph,2, name=c("yusif.aghalarli@gmail.com","sadiq.akhund@gmail.com"))
+
+## Checks if graph has multiple edges 
+egraph <- add_edges(egraph, c("lindy.donoho@enron.com","david.delainey@enron.com"))
+egraph <- add_edges(egraph, c("lindy.donoho@enron.com","david.delainey@enron.com"))
+any_multiple(egraph)
+count_multiple(egraph)
+
+
+
+
