@@ -114,4 +114,9 @@ egraph$largest_clique <- largest_cliques(egraph)
 #Power centrality
 most_powerfull_10 = sort(round(power_centrality(egraph, exp=0.5), 2),decreasing = TRUE)[1:10]
 
+#Find community
+communities = cluster_edge_betweenness(egraph)
+largest_community=sort(sizes(communities)[1])
+
+
 
