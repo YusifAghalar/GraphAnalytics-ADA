@@ -57,7 +57,7 @@ egraph <- igraph::simplify(
   remove.multiple = TRUE,
   remove.loops = TRUE,
 )
-
+egraph<-delete_vertices(egraph,V(egraph)[degree(egraph)<5])
 #Edges
 edges=E(egraph)
 #Vertices
@@ -108,7 +108,10 @@ centralGlobal <- V(egraph)[order(V(egraph)$betweenness , decreasing=TRUE)[1]]
 
 #Longest path(s)
 egraph$longest_path<-get_diameter(egraph)
-egraph$longest_distnace <- diameter(egraph)
+egraph$longest_distance <- diameter(egraph)
 #Largest clique
 egraph$largest_clique <- largest_cliques(egraph)
+#Power centrality
+most_powerfull_10 = sort(round(power_centrality(egraph, exp=0.5), 2),decreasing = TRUE)[1:10]
+
 
