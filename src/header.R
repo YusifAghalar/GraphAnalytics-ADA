@@ -1,7 +1,4 @@
-# rm(list=ls())
-library("stringr")
-library("igraph")
-library("sjmisc")
+
 # takes folder as an input and returns list of files
 fetchFiles <- function(repo, breadth = 0) {
   if(is.na(repo))
