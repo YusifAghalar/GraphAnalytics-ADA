@@ -15,7 +15,7 @@ source("./src/header.R")
 source("./src/process.R") # takes time...
 
 ## write to .csv file 
-# write.csv(x = emailsDF, "./emails.csv", row.names = F)
+write.csv(x = emailsDF, "./res/emails.csv", row.names = F)
 
 # start analyzing the network
 source("./src/analyze.R")
