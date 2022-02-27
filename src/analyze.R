@@ -6,7 +6,7 @@ egraph <- igraph::simplify(
   remove.multiple = TRUE,
   remove.loops = TRUE,
 )
-egraph<-delete_vertices(egraph,V(egraph)[degree(egraph)<5])
+egraph<-delete_vertices(egraph,V(egraph)[degree(egraph)<50])
 #Edges
 edges=E(egraph)
 #Vertices
