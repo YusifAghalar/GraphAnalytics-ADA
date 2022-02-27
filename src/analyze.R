@@ -71,3 +71,10 @@ largest_community=sort(sizes(communities)[1])
 #Clique
 egraph$largest_clique <- largest_cliques(egraph)
 
+#Ego graphs, plot largest one
+egos <-make_ego_graph(egraph)
+largest_ego <- egos[[order(ego_size(egraph),decreasing=TRUE)[1]]]
+plot(largest_ego,edge.arrow.size=.0005,  
+     edge.width = 2, vertex.color="green",vertex.size=5)
+
+
