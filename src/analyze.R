@@ -60,9 +60,7 @@ centralGlobal <- V(egraph)[order(V(egraph)$betweenness , decreasing=TRUE)[1]]
 #Longest path(s)
 egraph$longest_path<-get_diameter(egraph)
 egraph$longest_distance <- diameter(egraph)
-#Largest clique
-<<<<<<< HEAD:main.R
-egraph$largest_clique <- largest_cliques(egraph)
+
 #Power centrality
 most_powerfull_10 = sort(round(power_centrality(egraph, exp=0.5), 2),decreasing = TRUE)[1:10]
 
@@ -70,8 +68,6 @@ most_powerfull_10 = sort(round(power_centrality(egraph, exp=0.5), 2),decreasing 
 communities = cluster_edge_betweenness(egraph)
 largest_community=sort(sizes(communities)[1])
 
-
-
-=======
+#Clique
 egraph$largest_clique <- largest_cliques(egraph)
->>>>>>> 76e3d026472eb23c35798d08c215345ec1245ecb:src/analyze.R
+
