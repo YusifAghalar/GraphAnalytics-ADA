@@ -7,9 +7,12 @@ g <- set.vertex.attribute(g, "name", value=paste("v",1:vcount(g),sep=""))
 print(g)
 # VISUALIZATIONS...
 ## Setting the coordinates and adding a title label
-# plot(g, edge.arrow.size=.5, vertex.color="gold", vertex.size=c(10, 10, 10) * 0.54,
-#      vertex.frame.color="gray", vertex.label.color="black",
-#      vertex.label.cex=0.8, vertex.label.dist=2, edge.curved=0.2, )
+V(g)$weight <- degree(g)
+plot(g, edge.arrow.size=.5,  edge.width = 1,
+     vertex.color="gold", vertex.size=V(g)$weight,
+     vertex.frame.color="gray", vertex.label.color="black",
+     vertex.label.cex=0.8, vertex.label.dist=2, edge.curved=0.2, 
+     edge.arrow.color = "red", vertex.shape="circle")
 
 ## METHOD 1: plot function
 
